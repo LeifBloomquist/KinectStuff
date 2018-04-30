@@ -80,7 +80,7 @@ namespace KinectMIDI
                 {
                     skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
                     skeletonFrame.CopySkeletonDataTo(skeletons);
-                    callback(skeletons, skeletonFrame.FrameNumber );
+                    callback(skeletons, skeletonFrame.FrameNumber);
                 }
             }
         }
@@ -111,6 +111,16 @@ namespace KinectMIDI
                     this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
                 }
             }
+        }
+
+        public static Point3D JointToPoint3D(Joint joint)
+        {
+            Point3D ret = new Point3D();
+            ret.X = (double)joint.Position.X;
+            ret.Y = (double)joint.Position.Y;
+            ret.Z = (double)joint.Position.Z;
+
+            return ret;
         }
     }
 }

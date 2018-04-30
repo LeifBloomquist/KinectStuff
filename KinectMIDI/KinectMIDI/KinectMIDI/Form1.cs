@@ -26,66 +26,129 @@ namespace KinectMIDI
         private void bStart_Click(object sender, EventArgs e)
         {
             kinect.Initialize(HandleFrame);
-            kinect.SetSeatedMode(false);
+            kinect.SetSeatedMode(true);
             midi.InitializeMIDI("Kinect");
         }
 
         private void HandleFrame(Skeleton[] skeletons, int framenum)
         {
+            string details = "";
+            string midi_details = "";
+
+            Point3D left = null;
+            Point3D right = null;
+
+            int l_x_cc = 0;
+            int l_y_cc = 0;
+            int l_z_cc = 0;
+
+            int r_x_cc = 0; 
+            int r_y_cc = 0; 
+            int r_z_cc = 0;
+
+            // Extract and convert to Point3D format
+
+            foreach (Skeleton ske in skeletons)
+            {
+                if (ske.TrackingState == SkeletonTrackingState.Tracked)
+                {
+                    foreach (Joint joint in ske.Joints)
+                    {
+                        if (joint.JointType == JointType.HandLeft)
+                        {
+                            left = KinectHelper.JointToPoint3D(joint);
+                        }
+                        
+                        if (joint.JointType == JointType.HandRight)
+                        {
+                            right = KinectHelper.JointToPoint3D(joint);
+                        }
+                    }
+                }
+            }
+
+            // MIDI Stuff
+
+            // Left
+            if (left != null)
+            { 
+                l_x_cc = midi.ValueToMIDI((float)left.X, -0.5f, 0.5f);
+                l_y_cc = midi.ValueToMIDI((float)left.Y, -0.1f, 0.5f);
+                l_z_cc = midi.ValueToMIDI((float)left.Z, 0.9f, 1.4f);
+
+                midi.SendMIDI(ChannelCommand.Controller, 1, 20, l_x_cc);
+                midi.SendMIDI(ChannelCommand.Controller, 1, 21, l_y_cc);
+                midi.SendMIDI(ChannelCommand.Controller, 1, 22, l_z_cc);
+            }
+
+            // Right
+            if (right != null)
+            {
+                r_x_cc = midi.ValueToMIDI((float)right.X, -0.5f, 0.5f);
+                r_y_cc = midi.ValueToMIDI((float)right.Y, -0.1f, 0.5f);
+                r_z_cc = midi.ValueToMIDI((float)right.Z, 0.9f, 1.4f);
+
+                midi.SendMIDI(ChannelCommand.Controller, 2, 20, r_x_cc);
+                midi.SendMIDI(ChannelCommand.Controller, 2, 21, r_y_cc);
+                midi.SendMIDI(ChannelCommand.Controller, 2, 22, r_z_cc);
+            }
+
+            // Update Screen
+
             try
             {
                 this.Invoke((MethodInvoker)delegate
                 {
                     lDebug.Text = skeletons.Length.ToString() + " :: " + framenum.ToString(); // runs on UI thread
 
-                    string details = "";
-
-                    foreach (Skeleton ske in skeletons)
+                    // Left
+                    if (left != null)
                     {
-                        if (ske.TrackingState == SkeletonTrackingState.Tracked)
-                        {
-                            details += "Tracked!\n\n";
+                        details += "Left:\n";
 
-                            foreach (Joint joint in ske.Joints)
-                            {
-                                //on regarde si ce joint nous intéresse (en l’occurrence, la main gauche ici)
-                                if (joint.JointType == JointType.HandLeft)
-                                {
-                                    float x = joint.Position.X;
-                                    float y = joint.Position.Y;
-                                    float z = joint.Position.Z;
+                        details += left.X.ToString("X = 00.##") + "\n";
+                        details += left.Y.ToString("00.##") + "\n";
+                        details += left.Z.ToString("00.##") + "\n";
+                    }
 
-                                    //on récupère les coordonnées de ce joint. Perso j'affiche ça dans des label.
-                                    details += x.ToString("00.##") + "\n";
-                                    details += y.ToString("00.##") + "\n";
-                                    details += z.ToString("00.##");
+                    // Right
+                    if (right != null)
+                    {
+                        details += "\nRight:\n";
 
-                                    int x_cc = midi.ValueToMIDI(x, -0.5f, 0.5f);
-                                    int y_cc = midi.ValueToMIDI(y, -0.1f, 0.5f);
-                                    int z_cc = midi.ValueToMIDI(z, 0.9f, 1.4f);
-
-                                    midi.SendMIDI(ChannelCommand.Controller, 1, 20, x_cc);
-                                    midi.SendMIDI(ChannelCommand.Controller, 1, 21, y_cc);
-                                    midi.SendMIDI(ChannelCommand.Controller, 1, 22, z_cc);
-
-                                    lMIDI.Text = x_cc.ToString() + "\n" +
-                                        y_cc.ToString() + "\n" +
-                                        z_cc.ToString() + "\n";
-                                }
-
-                                //autres squelettes, etc
-                            }
-                        }
+                        details += right.X.ToString("00.##") + "\n";
+                        details += right.Y.ToString("00.##") + "\n";
+                        details += right.Z.ToString("00.##") + "\n";
                     }
 
                     lDetails.Text = details;
-                });
 
+                    midi_details += "Left:\n";
+
+                    midi_details += 
+                        l_x_cc.ToString() + "\n" +
+                        l_y_cc.ToString() + "\n" +
+                        l_z_cc.ToString() + "\n";
+
+                     midi_details += "\nRight:\n";
+
+                     midi_details +=
+                         r_x_cc.ToString() + "\n" +
+                         r_y_cc.ToString() + "\n" +
+                         r_z_cc.ToString() + "\n";
+
+                     lMIDI.Text = midi_details;
+                });
             }
             catch (Exception)
             {
                 ;
             }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
