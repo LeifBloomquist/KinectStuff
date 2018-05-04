@@ -46,6 +46,10 @@ namespace KinectMIDI
             int r_y_cc = 0; 
             int r_z_cc = 0;
 
+            int dist_cc = 0;
+
+            double distance = 0;
+
             // Extract and convert to Point3D format
 
             foreach (Skeleton ske in skeletons)
@@ -74,7 +78,7 @@ namespace KinectMIDI
             { 
                 l_x_cc = midi.ValueToMIDI((float)left.X, -0.5f, 0.5f);
                 l_y_cc = midi.ValueToMIDI((float)left.Y, -0.1f, 0.5f);
-                l_z_cc = midi.ValueToMIDI((float)left.Z, 0.9f, 1.4f);
+                l_z_cc = midi.ValueToMIDI((float)left.Z, 0.9f, 2.4f);
 
                 midi.SendMIDI(ChannelCommand.Controller, 1, 20, l_x_cc);
                 midi.SendMIDI(ChannelCommand.Controller, 1, 21, l_y_cc);
@@ -86,12 +90,25 @@ namespace KinectMIDI
             {
                 r_x_cc = midi.ValueToMIDI((float)right.X, -0.5f, 0.5f);
                 r_y_cc = midi.ValueToMIDI((float)right.Y, -0.1f, 0.5f);
-                r_z_cc = midi.ValueToMIDI((float)right.Z, 0.9f, 1.4f);
+                r_z_cc = midi.ValueToMIDI((float)right.Z, 0.9f, 2.4f);
 
                 midi.SendMIDI(ChannelCommand.Controller, 2, 20, r_x_cc);
                 midi.SendMIDI(ChannelCommand.Controller, 2, 21, r_y_cc);
                 midi.SendMIDI(ChannelCommand.Controller, 2, 22, r_z_cc);
             }
+
+            // Distance
+            if ((left != null) && (right != null))
+            {
+                double diffx = left.X - right.X;
+                double diffy = left.Y - right.Y;
+
+                distance = Math.Sqrt(diffx * diffx + diffy * diffy);
+
+                dist_cc = midi.ValueToMIDI((float)distance, 0, 1f);
+                midi.SendMIDI(ChannelCommand.Controller, 3, 30, dist_cc);
+            }
+
 
             // Update Screen
 
@@ -121,6 +138,8 @@ namespace KinectMIDI
                         details += right.Z.ToString("00.##") + "\n";
                     }
 
+                    details += "\nDistance: " + distance.ToString("00.##");
+
                     lDetails.Text = details;
 
                     midi_details += "Left:\n";
@@ -136,6 +155,8 @@ namespace KinectMIDI
                          r_x_cc.ToString() + "\n" +
                          r_y_cc.ToString() + "\n" +
                          r_z_cc.ToString() + "\n";
+
+                     midi_details += "\nDistance: " + dist_cc.ToString();
 
                      lMIDI.Text = midi_details;
                 });
