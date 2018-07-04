@@ -15,6 +15,8 @@ namespace KinectMIDI
 {
     public partial class Form1 : Form
     {
+        public const String FormatString = "+00.00;-00.00";
+
         KinectHelper kinect = new KinectHelper();
         MIDIHandler midi = MIDIHandler.Instance;
 
@@ -32,12 +34,6 @@ namespace KinectMIDI
 
         private void HandleFrame(Skeleton[] skeletons, int framenum)
         {
-            string details = "";
-            string midi_details = "";
-
-            Point3D left = null;
-            Point3D right = null;
-
             int l_x_cc = 0;
             int l_y_cc = 0;
             int l_z_cc = 0;
@@ -48,31 +44,14 @@ namespace KinectMIDI
 
             int dist_cc = 0;
 
-            double distance = 0;
+            
 
             // Extract and convert to Point3D format
-
-            foreach (Skeleton ske in skeletons)
-            {
-                if (ske.TrackingState == SkeletonTrackingState.Tracked)
-                {
-                    foreach (Joint joint in ske.Joints)
-                    {
-                        if (joint.JointType == JointType.HandLeft)
-                        {
-                            left = KinectHelper.JointToPoint3D(joint);
-                        }
-                        
-                        if (joint.JointType == JointType.HandRight)
-                        {
-                            right = KinectHelper.JointToPoint3D(joint);
-                        }
-                    }
-                }
-            }
+            List<Player3D> players = KinectHelper.SkeletonsToPlayer3D(skeletons);           
 
             // MIDI Stuff
 
+            /*
             // Left
             if (left != null)
             { 
@@ -98,67 +77,66 @@ namespace KinectMIDI
             }
 
             // Distance
-            if ((left != null) && (right != null))
-            {
-                double diffx = left.X - right.X;
-                double diffy = left.Y - right.Y;
-
-                distance = Math.Sqrt(diffx * diffx + diffy * diffy);
+            xxxx
 
                 dist_cc = midi.ValueToMIDI((float)distance, 0, 1f);
                 midi.SendMIDI(ChannelCommand.Controller, 3, 30, dist_cc);
-            }
-
+        
+            */
 
             // Update Screen
+            UpdateTrackingDetails(players, framenum);
 
+          
+        }
+
+        private void UpdateTrackingDetails(List<Player3D> players, int framenum)
+        {
             try
             {
-                this.Invoke((MethodInvoker)delegate
+                this.Invoke((MethodInvoker)delegate   // runs on UI thread
                 {
-                    lDebug.Text = skeletons.Length.ToString() + " :: " + framenum.ToString(); // runs on UI thread
+                    String details = "";
+                    lDebug.Text = "Tracked: " + players.Count.ToString();
+                    lFrame.Text = "Frame: " + framenum.ToString();
 
-                    // Left
-                    if (left != null)
+                    foreach (Player3D player in players)
                     {
-                        details += "Left:\n";
+                        // Body
+                        if (player.Body != null)
+                        {
+                            details += "Body:\n";
 
-                        details += left.X.ToString("X = 00.##") + "\n";
-                        details += left.Y.ToString("00.##") + "\n";
-                        details += left.Z.ToString("00.##") + "\n";
+                            details += "X = " + player.Body.X.ToString(FormatString) + "\n";
+                            details += "Y = " + player.Body.Y.ToString(FormatString) + "\n";
+                            details += "Z = " + player.Body.Z.ToString(FormatString) + "\n";
+                        }
+
+                        // Left
+                        if (player.Left != null)
+                        {
+                            details += "\n Left:\n";
+
+                            details += "X = " + player.Left.X.ToString(FormatString) + "\n";
+                            details += "Y = " + player.Left.Y.ToString(FormatString) + "\n";
+                            details += "Z = " + player.Left.Z.ToString(FormatString) + "\n";
+                        }
+
+                        // Right
+                        if (player.Right != null)
+                        {
+                            details += "\nRight:\n";
+
+                            details += "X = " + player.Right.X.ToString(FormatString) + "\n";
+                            details += "Y = " + player.Right.Y.ToString(FormatString) + "\n";
+                            details += "Z = " + player.Right.Z.ToString(FormatString) + "\n";
+                        }
+
+                        // Distance
+                        details += "\nDistance: " + player.Distance.ToString("00.##");
+
+                        lDetails.Text = details;
                     }
-
-                    // Right
-                    if (right != null)
-                    {
-                        details += "\nRight:\n";
-
-                        details += right.X.ToString("00.##") + "\n";
-                        details += right.Y.ToString("00.##") + "\n";
-                        details += right.Z.ToString("00.##") + "\n";
-                    }
-
-                    details += "\nDistance: " + distance.ToString("00.##");
-
-                    lDetails.Text = details;
-
-                    midi_details += "Left:\n";
-
-                    midi_details += 
-                        l_x_cc.ToString() + "\n" +
-                        l_y_cc.ToString() + "\n" +
-                        l_z_cc.ToString() + "\n";
-
-                     midi_details += "\nRight:\n";
-
-                     midi_details +=
-                         r_x_cc.ToString() + "\n" +
-                         r_y_cc.ToString() + "\n" +
-                         r_z_cc.ToString() + "\n";
-
-                     midi_details += "\nDistance: " + dist_cc.ToString();
-
-                     lMIDI.Text = midi_details;
                 });
             }
             catch (Exception)
@@ -166,6 +144,32 @@ namespace KinectMIDI
                 ;
             }
         }
+
+        /*
+
+                    midi_details += "Left:\n";
+
+                    midi_details +=
+                        l_x_cc.ToString() + "\n" +
+                        l_y_cc.ToString() + "\n" +
+                        l_z_cc.ToString() + "\n";
+
+                    midi_details += "\nRight:\n";
+
+                    midi_details +=
+                        r_x_cc.ToString() + "\n" +
+                        r_y_cc.ToString() + "\n" +
+                        r_z_cc.ToString() + "\n";
+
+                    midi_details += "\nDistance: " + dist_cc.ToString();
+
+                    lMIDI.Text = midi_details;
+                });
+            }
+            
+        }
+         * 
+         */
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {

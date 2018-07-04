@@ -7,6 +7,7 @@ using Microsoft.Kinect;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace KinectMIDI
 {
@@ -113,13 +114,55 @@ namespace KinectMIDI
             }
         }
 
+        // Place *Tracked Skeletons Only* into a List
+        public static List<Player3D> SkeletonsToPlayer3D(Skeleton[] skeletons)
+        {
+            List<Player3D> players = new List<Player3D>();
+
+            foreach (Skeleton ske in skeletons)
+            {
+                if (ske.TrackingState == SkeletonTrackingState.Tracked)
+                {
+                    Player3D new_player = new Player3D();
+                    new_player.Body = SkeletonToPoint3D(ske);
+
+                    foreach (Joint joint in ske.Joints)
+                    {
+                        switch (joint.JointType)
+                        {
+                            case JointType.HandLeft:
+                                new_player.Left = JointToPoint3D(joint);
+                                break;
+
+                            case JointType.HandRight:
+                                new_player.Right = JointToPoint3D(joint);
+                                break;
+                        }
+                    }
+
+                    new_player.calcDistance();
+                    players.Add(new_player);
+                }
+            }
+
+            return players;
+        }
+
+        private static Point3D SkeletonToPoint3D(Skeleton ske)
+        {
+            Point3D ret = new Point3D();
+            ret.X = (double)ske.Position.X;
+            ret.Y = (double)ske.Position.Y;
+            ret.Z = (double)ske.Position.Z;
+            return ret;
+        }
+
         public static Point3D JointToPoint3D(Joint joint)
         {
             Point3D ret = new Point3D();
             ret.X = (double)joint.Position.X;
             ret.Y = (double)joint.Position.Y;
             ret.Z = (double)joint.Position.Z;
-
             return ret;
         }
     }

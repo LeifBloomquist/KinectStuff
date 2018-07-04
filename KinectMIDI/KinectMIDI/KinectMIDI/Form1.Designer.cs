@@ -32,11 +32,15 @@
             this.lDebug = new System.Windows.Forms.Label();
             this.lDetails = new System.Windows.Forms.Label();
             this.lMIDI = new System.Windows.Forms.Label();
+            this.cbSeated = new System.Windows.Forms.CheckBox();
+            this.lFrame = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // bStart
             // 
-            this.bStart.Location = new System.Drawing.Point(12, 12);
+            this.bStart.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bStart.ForeColor = System.Drawing.Color.Green;
+            this.bStart.Location = new System.Drawing.Point(366, 79);
             this.bStart.Name = "bStart";
             this.bStart.Size = new System.Drawing.Size(112, 48);
             this.bStart.TabIndex = 0;
@@ -46,47 +50,82 @@
             // 
             // lDebug
             // 
-            this.lDebug.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lDebug.Location = new System.Drawing.Point(130, 25);
+            this.lDebug.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lDebug.ForeColor = System.Drawing.Color.White;
+            this.lDebug.Location = new System.Drawing.Point(12, 12);
             this.lDebug.Name = "lDebug";
-            this.lDebug.Size = new System.Drawing.Size(217, 23);
+            this.lDebug.Size = new System.Drawing.Size(335, 23);
             this.lDebug.TabIndex = 1;
             this.lDebug.Text = "--";
-            this.lDebug.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lDebug.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lDetails
             // 
             this.lDetails.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lDetails.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lDetails.Location = new System.Drawing.Point(12, 76);
+            this.lDetails.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lDetails.ForeColor = System.Drawing.Color.White;
+            this.lDetails.Location = new System.Drawing.Point(12, 79);
             this.lDetails.Name = "lDetails";
-            this.lDetails.Size = new System.Drawing.Size(335, 475);
+            this.lDetails.Size = new System.Drawing.Size(335, 537);
             this.lDetails.TabIndex = 2;
             this.lDetails.Text = "--";
             // 
             // lMIDI
             // 
             this.lMIDI.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lMIDI.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lMIDI.Location = new System.Drawing.Point(371, 76);
+            this.lMIDI.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lMIDI.ForeColor = System.Drawing.Color.White;
+            this.lMIDI.Location = new System.Drawing.Point(621, 198);
             this.lMIDI.Name = "lMIDI";
             this.lMIDI.Size = new System.Drawing.Size(335, 475);
             this.lMIDI.TabIndex = 3;
             this.lMIDI.Text = "--";
             // 
+            // cbSeated
+            // 
+            this.cbSeated.AutoSize = true;
+            this.cbSeated.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbSeated.ForeColor = System.Drawing.Color.White;
+            this.cbSeated.Location = new System.Drawing.Point(701, 113);
+            this.cbSeated.Name = "cbSeated";
+            this.cbSeated.Size = new System.Drawing.Size(172, 27);
+            this.cbSeated.TabIndex = 4;
+            this.cbSeated.Text = "Seated Mode";
+            this.cbSeated.UseVisualStyleBackColor = true;
+            // 
+            // lFrame
+            // 
+            this.lFrame.BackColor = System.Drawing.Color.Transparent;
+            this.lFrame.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lFrame.ForeColor = System.Drawing.Color.White;
+            this.lFrame.Location = new System.Drawing.Point(688, 12);
+            this.lFrame.Name = "lFrame";
+            this.lFrame.Size = new System.Drawing.Size(253, 23);
+            this.lFrame.TabIndex = 5;
+            this.lFrame.Text = "--";
+            this.lFrame.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(953, 560);
+            this.BackColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(953, 625);
+            this.Controls.Add(this.lFrame);
+            this.Controls.Add(this.cbSeated);
             this.Controls.Add(this.lMIDI);
             this.Controls.Add(this.lDetails);
             this.Controls.Add(this.lDebug);
             this.Controls.Add(this.bStart);
+            this.ForeColor = System.Drawing.Color.White;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Schema Factor Kinect MIDI Tracker Maker Festival 2018";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -96,6 +135,8 @@
         private System.Windows.Forms.Label lDebug;
         private System.Windows.Forms.Label lDetails;
         private System.Windows.Forms.Label lMIDI;
+        private System.Windows.Forms.CheckBox cbSeated;
+        private System.Windows.Forms.Label lFrame;
     }
 }
 
