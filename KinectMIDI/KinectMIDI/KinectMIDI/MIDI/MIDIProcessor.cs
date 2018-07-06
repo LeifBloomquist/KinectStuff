@@ -65,9 +65,9 @@ namespace KinectMIDI
             for (int i = 0; i < num; i++) //player_array.Length; i++)
             {
                 // Head
-                b_x_cc = midi.ValueToMIDI((float)player_array[i].Head.X, -0.5f, 0.5f);
-                b_y_cc = midi.ValueToMIDI((float)player_array[i].Head.Y, -0.1f, 0.5f);
-                b_z_cc = midi.ValueToMIDI((float)player_array[i].Head.Z, 0.9f, 2.4f);
+                b_x_cc = midi.ValueToMIDI((float)player_array[i].Head.X, -1f, 1f); //-0.5f, 0.5f);
+                b_y_cc = midi.ValueToMIDI((float)player_array[i].Head.Y, -1f, 1f); //-0.1f, 0.5f);
+                b_z_cc = midi.ValueToMIDI((float)player_array[i].Head.Z,  0f, 3f); //0.9f, 2.4f);
                 b_v_cc = midi.ValueToMIDI((float)player_array[i].Head.V, 0.0f, 3.0f);
 
                 midi.SendMIDI(ChannelCommand.Controller, i, 20, b_x_cc);
@@ -76,9 +76,9 @@ namespace KinectMIDI
                 midi.SendMIDI(ChannelCommand.Controller, i, 23, b_z_cc);
 
                 // Left
-                l_x_cc = midi.ValueToMIDI((float)player_array[i].Left.X, -0.5f, 0.5f);
-                l_y_cc = midi.ValueToMIDI((float)player_array[i].Left.Y, -0.1f, 0.5f);
-                l_z_cc = midi.ValueToMIDI((float)player_array[i].Left.Z, 0.9f, 2.4f);
+                l_x_cc = midi.ValueToMIDI((float)player_array[i].Left.X, -1f, 1f);  // -0.5f, 0.5f);
+                l_y_cc = midi.ValueToMIDI((float)player_array[i].Left.Y, -1f, 1f);  // -0.1f, 0.5f);
+                l_z_cc = midi.ValueToMIDI((float)player_array[i].Left.Z,  0f, 3f);  // 0.9f, 2.4f);
                 l_v_cc = midi.ValueToMIDI((float)player_array[i].Left.V, 0.0f, 3.0f);
 
                 midi.SendMIDI(ChannelCommand.Controller, i, 30, l_x_cc);
@@ -87,9 +87,9 @@ namespace KinectMIDI
                 midi.SendMIDI(ChannelCommand.Controller, i, 33, l_v_cc);
 
                 // Right
-                r_x_cc = midi.ValueToMIDI((float)player_array[i].Right.X, -0.5f, 0.5f);
-                r_y_cc = midi.ValueToMIDI((float)player_array[i].Right.Y, -0.1f, 0.5f);
-                r_z_cc = midi.ValueToMIDI((float)player_array[i].Right.Z, 0.9f, 2.4f);
+                r_x_cc = midi.ValueToMIDI((float)player_array[i].Right.X, -1f, 1f); // -0.5f, 0.5f);
+                r_y_cc = midi.ValueToMIDI((float)player_array[i].Right.Y, -1f, 1f); // -0.1f, 0.5f);
+                r_z_cc = midi.ValueToMIDI((float)player_array[i].Right.Z,  0f, 3f); // 0.9f, 2.4f);
                 r_v_cc = midi.ValueToMIDI((float)player_array[i].Right.V, 0.0f, 3.0f);
 
                 midi.SendMIDI(ChannelCommand.Controller, i, 40, r_x_cc);
