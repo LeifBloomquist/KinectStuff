@@ -19,7 +19,9 @@ namespace KinectMIDI
         private long lastTimeStamp = 0;  // milliseconds
 
         // The array of players
-        Player3D[] players = new Player3D[1];
+        Player3D[] players = new Player3D[5];
+        
+        public int num_tracked = 0;
 
         public void Initialize(Action<Skeleton[], int, long> callback)
         {
@@ -126,7 +128,7 @@ namespace KinectMIDI
         // Place *Tracked Skeletons Only* into the player array
         public List<Player3D> SkeletonsToPlayer3D(Skeleton[] skeletons, long timeDelta_ms)
         {
-            int offset = 0;
+            num_tracked = 0;
 
             foreach (Skeleton ske in skeletons)
             {
@@ -137,21 +139,21 @@ namespace KinectMIDI
                         switch (joint.JointType)
                         {
                             case JointType.HandLeft:
-                                JointToPoint3D(ref players[offset].Left, joint);
+                                JointToPoint3D(ref players[num_tracked].Left, joint);
                                 break;
 
                             case JointType.HandRight:
-                                JointToPoint3D(ref players[offset].Right, joint);
+                                JointToPoint3D(ref players[num_tracked].Right, joint);
                                 break;
 
                             case JointType.Head:
-                                JointToPoint3D(ref players[offset].Head, joint);
+                                JointToPoint3D(ref players[num_tracked].Head, joint);
                                 break;
                         }
                     }
 
-                    players[offset].calcDistance();
-                    offset++;
+                    players[num_tracked].calcDistance();
+                    num_tracked++;
                 }
             }
 

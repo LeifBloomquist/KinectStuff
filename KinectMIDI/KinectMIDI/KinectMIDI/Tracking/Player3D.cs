@@ -41,7 +41,7 @@ namespace KinectMIDI
             Right.V = calcPointVelocity(Right, Right0, timeDelta_s);
             Head.V = calcPointVelocity(Head, Head0, timeDelta_s);
 
-            Console.WriteLine("Right.V = " + Right.V);
+           // Console.WriteLine("Right.V = " + Right.V);
             
                 // Save for next iteration
                 Left0 = Left; 

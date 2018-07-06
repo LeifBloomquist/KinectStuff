@@ -26,8 +26,9 @@ namespace KinectMIDI
 
         private void bStart_Click(object sender, EventArgs e)
         {
+            MIDIProcessor.StartMIDI();
             kinect.Initialize(HandleFrame);
-            kinect.SetSeatedMode(cbSeated.Checked);           
+            kinect.SetSeatedMode(cbSeated.Checked);            
         }
 
         private void HandleFrame(Skeleton[] skeletons, int framenum, long timeDelta_ms)
@@ -38,8 +39,11 @@ namespace KinectMIDI
             // Update Screen
             UpdateTrackingDetails(players, framenum, timeDelta_ms);
 
-            // MIDI Processing + Updates Screen
-            MIDIProcessor.ProcessMIDI(players);
+            // MIDI Processing
+            String midi_output = MIDIProcessor.ProcessMIDI(players, kinect.num_tracked);
+
+            // Update Screen
+            UpdateMIDIDetails(players, midi_output);
         }
 
         private void UpdateTrackingDetails(List<Player3D> players, int framenum, long delta)
@@ -48,7 +52,7 @@ namespace KinectMIDI
             {
                 this.Invoke((MethodInvoker)delegate   // runs on UI thread
                 {
-                    lDebug.Text = "Tracked: " + players.Count.ToString();
+                    lDebug.Text = "Tracked: " + kinect.num_tracked.ToString();
                     lFrame.Text = "Frame: " + framenum.ToString();
                     lDelta.Text = "Delta: " + delta.ToString();
 
@@ -103,6 +107,21 @@ namespace KinectMIDI
             details += "\nDistance:\n" + player.HandDistance.ToString(FormatString);
 
             return details;
+        }
+
+        private void UpdateMIDIDetails(List<Player3D> players, String details)
+        {
+            try
+            {
+                this.Invoke((MethodInvoker)delegate   // runs on UI thread
+                {
+                    lMIDI.Text = details;
+                });
+            }
+            catch (Exception)
+            {
+                ;
+            }
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
