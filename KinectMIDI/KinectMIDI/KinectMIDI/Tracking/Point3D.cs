@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KinectMIDI
 {
-    public class Point3D
+    public struct Point3D
     {
         public double X { get; set; }
         public double Y { get; set; }

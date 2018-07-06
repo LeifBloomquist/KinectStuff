@@ -56,7 +56,7 @@ namespace KinectMIDI
             for (int i = 0; i < player_array.Length; i++)
             {
                 // Body
-                if (player_array[i].Head != null)
+        //        if (player_array[i].Head != null)
                 {
                     b_x_cc = midi.ValueToMIDI((float)player_array[i].Head.X, -0.5f, 0.5f);
                     b_y_cc = midi.ValueToMIDI((float)player_array[i].Head.Y, -0.1f, 0.5f);
@@ -68,7 +68,7 @@ namespace KinectMIDI
                 }
 
                 // Left
-                if (player_array[i].Left != null)
+  //              if (player_array[i].Left != null)
                 {
                     l_x_cc = midi.ValueToMIDI((float)player_array[i].Left.X, -0.5f, 0.5f);
                     l_y_cc = midi.ValueToMIDI((float)player_array[i].Left.Y, -0.1f, 0.5f);
@@ -80,7 +80,7 @@ namespace KinectMIDI
                 }
 
                 // Right
-                if (player_array[i].Right != null)
+  //              if (player_array[i].Right != null)
                 {
                     r_x_cc = midi.ValueToMIDI((float)player_array[i].Right.X, -0.5f, 0.5f);
                     r_y_cc = midi.ValueToMIDI((float)player_array[i].Right.Y, -0.1f, 0.5f);
@@ -104,7 +104,7 @@ namespace KinectMIDI
                 string details = "";
 
                 // Body
-                if (player_array[i].Head != null)
+//if (player_array[i].Head != null)
                 {
                     details += "Body:\n";
 
@@ -114,7 +114,7 @@ namespace KinectMIDI
                 }
 
                 // Left
-                if (player_array[i].Left != null)
+  //              if (player_array[i].Left != null)
                 {
                     details += "\nLeft:\n";
 
@@ -124,7 +124,7 @@ namespace KinectMIDI
                 }
 
                 // Right
-                if (player_array[i].Right != null)
+      //          if (player_array[i].Right != null)
                 {
                     details += "\nRight:\n";
 

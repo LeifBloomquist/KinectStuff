@@ -67,7 +67,7 @@ namespace KinectMIDI
             string details = "";
 
             // Body
-            if (player.Head != null)
+ //           if (player.Head != null)
             {
                 details += "Head:\n";
 
@@ -78,7 +78,7 @@ namespace KinectMIDI
             }
 
             // Left
-            if (player.Left != null)
+ //           if (player.Left != null)
             {
                 details += "\nLeft:\n";
 
@@ -89,7 +89,7 @@ namespace KinectMIDI
             }
 
             // Right
-            if (player.Right != null)
+//            if (player.Right != null)
             {
                 details += "\nRight:\n";
 
