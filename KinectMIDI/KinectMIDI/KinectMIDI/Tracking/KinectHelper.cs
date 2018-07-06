@@ -14,9 +14,14 @@ namespace KinectMIDI
     class KinectHelper
     {
         private KinectSensor sensor;
-        Action<Skeleton[], int> callback;
+        Action<Skeleton[], int, long> callback;
 
-        public void Initialize(Action<Skeleton[], int> callback)
+        private long lastTimeStamp = 0;  // milliseconds
+
+        // The array of players
+        Player3D[] players = new Player3D[2]();
+
+        public void Initialize(Action<Skeleton[], int, long> callback)
         {
             this.callback = callback;
 
@@ -58,7 +63,7 @@ namespace KinectMIDI
             }
         }
 
-        private void Stop()
+        public void Stop()
         {
             if (null != this.sensor)
             {
@@ -79,9 +84,13 @@ namespace KinectMIDI
             {
                 if (skeletonFrame != null)
                 {
+                    long timeDelta = skeletonFrame.Timestamp - lastTimeStamp;
+
                     skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
                     skeletonFrame.CopySkeletonDataTo(skeletons);
-                    callback(skeletons, skeletonFrame.FrameNumber);
+                    callback(skeletons, skeletonFrame.FrameNumber, timeDelta);
+
+                    lastTimeStamp = skeletonFrame.Timestamp;
                 }
             }
         }
@@ -115,16 +124,15 @@ namespace KinectMIDI
         }
 
         // Place *Tracked Skeletons Only* into a List
-        public static List<Player3D> SkeletonsToPlayer3D(Skeleton[] skeletons)
+        public List<Player3D> SkeletonsToPlayer3D(Skeleton[] skeletons, long timeDelta_ms)
         {
-            List<Player3D> players = new List<Player3D>();
+            int offset = 0;
 
             foreach (Skeleton ske in skeletons)
             {
                 if (ske.TrackingState == SkeletonTrackingState.Tracked)
                 {
-                    Player3D new_player = new Player3D();
-                    new_player.Body = SkeletonToPoint3D(ske);
+                    players[offset++]
 
                     foreach (Joint joint in ske.Joints)
                     {
@@ -137,6 +145,10 @@ namespace KinectMIDI
                             case JointType.HandRight:
                                 new_player.Right = JointToPoint3D(joint);
                                 break;
+
+                            case JointType.Head:
+                                new_player.Head = JointToPoint3D(joint);
+                                break;
                         }
                     }
 
@@ -145,10 +157,26 @@ namespace KinectMIDI
                 }
             }
 
+            // Calculate velocity of all the joints
+            CalculateVelocities(players, timeDelta_ms);
+
             return players;
         }
+        
+        private void CalculateVelocities(List<Player3D> players, long timeDelta_ms)
+        {
+            double timeDelta_s = timeDelta_ms / 1000d;
 
-        private static Point3D SkeletonToPoint3D(Skeleton ske)
+            foreach (Player3D player in players)
+            {
+                player.calcVelocity(timeDelta_ms);
+            }
+        }
+
+         
+
+       /*
+        * private static Point3D SkeletonToPoint3D(Skeleton ske)
         {
             Point3D ret = new Point3D();
             ret.X = (double)ske.Position.X;
@@ -156,14 +184,13 @@ namespace KinectMIDI
             ret.Z = (double)ske.Position.Z;
             return ret;
         }
+        * */
 
-        public static Point3D JointToPoint3D(Joint joint)
+        public static void JointToPoint3D(ref Point3D point, Joint joint)
         {
-            Point3D ret = new Point3D();
-            ret.X = (double)joint.Position.X;
-            ret.Y = (double)joint.Position.Y;
-            ret.Z = (double)joint.Position.Z;
-            return ret;
+            point.X = (double)joint.Position.X;
+            point.Y = (double)joint.Position.Y;
+            point.Z = (double)joint.Position.Z;          
         }
     }
 }

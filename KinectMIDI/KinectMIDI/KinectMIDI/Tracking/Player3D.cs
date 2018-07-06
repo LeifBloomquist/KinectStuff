@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 
 namespace KinectMIDI
 {
-    public class Player3D
+    public struct Player3D
     {
         public Point3D Left    { get; set; }
         public Point3D Right   { get; set; }
-        public Point3D Body    { get; set; }
-        public double Distance { get; private set; }
+        public Point3D Head    { get; set; }
+        public double HandDistance { get; private set; }
+
+        // For velocity calcs
+        private Point3D Left0; 
+        private Point3D Right0;
+        private Point3D Head0; 
 
         public void calcDistance()
         {
@@ -20,12 +25,40 @@ namespace KinectMIDI
                 double diffx = Left.X - Right.X;
                 double diffy = Left.Y - Right.Y;
 
-                Distance = Math.Sqrt(diffx * diffx + diffy * diffy);
+                HandDistance = Math.Sqrt(diffx * diffx + diffy * diffy);
             }
             else
             {
-                Distance = 0;
+                HandDistance = 0;
             }
+        }
+
+        public void calcVelocity(double timeDelta_s)
+        {
+            Left.V = calcPointMotion(Left, Left0, timeDelta_s);
+            Right.V = calcPointMotion(Right, Right0, timeDelta_s);
+            Head.V = calcPointMotion(Head, Head0, timeDelta_s);
+            
+            // Save for next iteration
+            Left0 = Left; 
+            Right0 = Right;
+            Head0 = Head;           
+        }
+
+        private double calcPointMotion(Point3D current, Point3D last, double timeDelta_s)
+        {
+            if (last == null) // First time through
+            {
+                return 0d;
+            }
+
+            double diffx = current.X - last.X;
+            double diffy = current.Y - last.Y;
+            double diffz = current.Z - last.Z;
+
+            double distanceMoved = Math.Sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
+            double velocity_s = distanceMoved / timeDelta_s;
+            return distanceMoved;
         }
     }
 }
