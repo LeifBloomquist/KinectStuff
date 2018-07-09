@@ -128,7 +128,17 @@ namespace KinectMIDI
         // Place *Tracked Skeletons Only* into the player array
         public List<Player3D> SkeletonsToPlayer3D(Skeleton[] skeletons, long timeDelta_ms)
         {
+            //
             num_tracked = 0;
+          //  players[num_tracked].Left
+          //  players[num_tracked].Right.V = 0;
+            players[0].Left.V = 0;
+            players[0].Right.V = 0;
+            players[0].Head.V = 0;
+            players[1].Left.V = 0;
+            players[1].Right.V = 0;
+            players[1].Head.V = 0;
+
 
             foreach (Skeleton ske in skeletons)
             {
@@ -168,7 +178,7 @@ namespace KinectMIDI
             double timeDelta_s = timeDelta_ms / 1000d;
 
             players[0].calcVelocity(timeDelta_s);
-            //players[1].calcVelocity(timeDelta_s);
+            players[1].calcVelocity(timeDelta_s);
 
             /*
             foreach (Player3D player in players)

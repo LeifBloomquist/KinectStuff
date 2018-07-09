@@ -45,6 +45,9 @@ namespace KinectMIDI
 
             Player3D[] player_array = players.ToArray();
 
+          //  player_array[1] = player_array[0]; num = 2;
+
+                
             int l_x_cc = 0;
             int l_y_cc = 0;
             int l_z_cc = 0;
@@ -64,16 +67,18 @@ namespace KinectMIDI
 
             for (int i = 0; i < num; i++) //player_array.Length; i++)
             {
+              //  if (i == 0) { i = 1; details += "*"; };
                 // Head
+
                 b_x_cc = midi.ValueToMIDI((float)player_array[i].Head.X, -1f, 1f); //-0.5f, 0.5f);
                 b_y_cc = midi.ValueToMIDI((float)player_array[i].Head.Y, -1f, 1f); //-0.1f, 0.5f);
                 b_z_cc = midi.ValueToMIDI((float)player_array[i].Head.Z,  0f, 3f); //0.9f, 2.4f);
-                b_v_cc = midi.ValueToMIDI((float)player_array[i].Head.V, 0.0f, 3.0f);
+                b_v_cc = midi.ValueToMIDI((float)player_array[i].Head.V,  0f, 1f);
 
                 midi.SendMIDI(ChannelCommand.Controller, i, 20, b_x_cc);
                 midi.SendMIDI(ChannelCommand.Controller, i, 21, b_y_cc);
                 midi.SendMIDI(ChannelCommand.Controller, i, 22, b_z_cc);
-                midi.SendMIDI(ChannelCommand.Controller, i, 23, b_z_cc);
+                midi.SendMIDI(ChannelCommand.Controller, i, 23, b_v_cc);
 
                 // Left
                 l_x_cc = midi.ValueToMIDI((float)player_array[i].Left.X, -1f, 1f);  // -0.5f, 0.5f);
@@ -103,11 +108,11 @@ namespace KinectMIDI
 
 
                 // TODO - Detect jumps, claps, etc.  *******
-
-                //if (player_array[i].Right.V > 0.3d)
+                
+                // Notes based on movement
 
                 velocity_right[i] += player_array[i].Right.V;
-                if (velocity_right[i] > 5d)
+                if (velocity_right[i] > 10d)
                 {
                     int velocity = r_v_cc;
                     float height = (float)r_y_cc / 127f;  // Scale 0-1
@@ -123,7 +128,7 @@ namespace KinectMIDI
                 }
 
                 velocity_left[i] += player_array[i].Left.V;
-                if (velocity_left[i] > 5d)
+                if (velocity_left[i] > 8d)
                 {
                     int velocity = l_v_cc;
                     float height = (float)l_y_cc / 127f;  // Scale 0-1
@@ -163,10 +168,13 @@ namespace KinectMIDI
                 details += "V = " + r_v_cc.ToString(MIDIFormatString) + "\n";
 
                 // Distance
-                details += "\nDistance:\n" + player_array[i].HandDistance.ToString(MIDIFormatString);               
+                details += "\nDistance:\n" + dist_cc.ToString(MIDIFormatString);               
+
+                // Delimiter
+                details += "*";
             }
 
-            return details; // details;
+            return details;
         }
     }
 }
