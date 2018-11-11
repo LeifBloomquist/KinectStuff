@@ -42,106 +42,105 @@ namespace KinectC64
             tempx = (pictureBox1.Width / 2f);
             tempy = (pictureBox1.Height / 2f);
             tempz = 100f;
-
-            System.Windows.Forms.Timer aTimer = new System.Windows.Forms.Timer();            
-            aTimer.Tick += new EventHandler(OnTimedEvent);
-            aTimer.Interval=10;
-            aTimer.Enabled=true;
         }   
-
-        // Specify what you want to happen when the Elapsed event is raised.
-        private void OnTimedEvent(object source, EventArgs e)
-        {
-            Animate();            
-        }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            Animate();           
+            //Animate();           
         }
 
-        private void Animate()
+        private void DrawPoint(Point3D J, Pen color)
         {
-          if (graphicsObj == null) return;
-          graphicsObj.Clear(Color.Black);
+            float cx = (pictureBox1.Width / 2f);
+            float cy = (pictureBox1.Height / 2f);
 
-          Pen pos_pen = whitePen;
-          Pen vel_pen = whitePen;
+            // Left Hand Position
 
-          /*foreach (myHand hand in leap.hands)
-          {
-            if (hand.isLeft)
-            {
-              pos_pen = redPen;
-              vel_pen = yellowPen;
-            }
-            else if (hand.isRight)
-            {
-              pos_pen = greenPen;
-              vel_pen = bluePen;
-            }
-            else // ?
-            {
-              return;
-            }
+            float px = cx + (float)J.X * 500f;
+            float py = cy - (float)J.Y * 500f;  // Invert for graphicsObj
+            float ps = (float) J.Z * 40f;
 
-            // Position
-
-            float px = (pictureBox1.Width / 2f) + hand.posX;
-            float py = (pictureBox1.Height) - hand.posY;
-            float psize = 50 + (hand.posZ);
             try
             {
-              graphicsObj.DrawEllipse(pos_pen, px, py, psize, psize);
+                graphicsObj.DrawEllipse(color, px, py, ps, ps);
             }
             catch { }
+        }        
 
-            // Motion
+        private void Animate(List<Player3D> players)
+        {
+          if (graphicsObj == null) return;
 
+          try
+          {
+              graphicsObj.Clear(Color.Black);
+          }
+          catch { }
+
+          Pen vel_pen = whitePen;
+
+          foreach (Player3D p3d in players)
+          {
+              DrawPoint(p3d.Left, greenPen);
+              DrawPoint(p3d.Right, bluePen);
+              DrawPoint(p3d.Head, whitePen);
+              DrawPoint(p3d.Spine, yellowPen);
+
+
+              // Motion
+
+              /*
             float mx = (pictureBox1.Width / 2f) + hand.velX;
-            float my = (pictureBox1.Height / 2f) - hand.velY;
+            float my =  - hand.velY;
             float msize = 5 + (hand.pinch * 10f);
 
             float kx = (float)kal_x.update(mx);
             float ky = (float)kal_y.update(my);
+          
 
             graphicsObj.DrawEllipse(vel_pen, kx, ky, msize, msize);
-          }
+          
            * 
            * */
+          }
         }
 
         private void DoJoystick(List<Player3D> players)
         {
             var motion = new byte[2] {0,0};
 
+            toggle(Up, false);
+            toggle(Down, false);
+            toggle(Left, false);
+            toggle(Right, false);
+            toggle(Fire, false, Color.Red);
+
             if (udp == null)
             {
                 return;
             }
 
-            if (players.Count == 0)
+            switch (activePort)
             {
-                motion[0] = 0;
-                motion[1] = 0;
-            }
-            else
-            {
-                switch (activePort)
-                {
-                    case 1:
+                case 1:
+                    if (players.Count >= 1)
+                    {
                         motion[0] = getMotions(players.ElementAt(0));
-                        break;
+                    }
+                    break;
 
-                    case 2:
+                case 2:
+                    if (players.Count >= 1)
+                    {
                         motion[1] = getMotions(players.ElementAt(0));
-                        break;
+                    }
+                    motion[1] = getMotions(players.ElementAt(0));
+                    break;
 
-                     case 3:
-                        motion[0] = getMotions(players.ElementAt(0));
-                        motion[1] = getMotions(players.ElementAt(1));
-                        break;
-                }
+                case 3:
+                    motion[0] = getMotions(players.ElementAt(0));
+                    motion[1] = getMotions(players.ElementAt(1));
+                    break;
             }
           
             // UniJoysticle Protocol V2
@@ -158,15 +157,17 @@ namespace KinectC64
         
         private byte getMotions(Player3D player)
         {       
-            const float threshold = 0.1f;
+            const float threshold = 0.2f;
+            const float thresholdf = 0.5f;
 
             byte temp=0;
             bool up = false, down = false, left = false, right = false, fire = false;
 
-            if ((player.Right.X - player.Head.X)  > threshold) right = true;
-            if ((player.Head.X  - player.Right.X) > threshold) left = true;
-            if ((player.Right.Y - player.Head.Y)  > threshold) up = true;
-            if ((player.Head.Y  - player.Right.Y) > threshold) down = true;
+            if ((player.Right.X - player.Spine.X) > threshold) right = true;
+            if ((player.Spine.X - player.Right.X) > threshold) left = true;
+            if ((player.Right.Y - player.Spine.Y) > threshold) up = true;
+            if ((player.Spine.Y - player.Right.Y) > threshold) down = true;
+            if ((player.Spine.Z - player.Right.Z) > (thresholdf)) fire = true;
 
             toggle(Up, up);
             toggle(Down, down);
@@ -174,11 +175,11 @@ namespace KinectC64
             toggle(Right, right);
             toggle(Fire, fire, Color.Red);
 
-            if (up) temp |= 0x01;
-            if (down) temp |= 0x02;
-            if (left) temp |= 0x04;
+            if (up) temp    |= 0x01;
+            if (down) temp  |= 0x02;
+            if (left) temp  |= 0x04;
             if (right) temp |= 0x08;
-            if (fire) temp |= 0x10;
+            if (fire) temp  |= 0x10;
 
             return temp;
         }
@@ -270,6 +271,9 @@ namespace KinectC64
             // Update Screen
             UpdateTrackingDetails(players, framenum, timeDelta_ms);
 
+            // Animation
+            Animate(players);
+
             // Joystick Emulation
             DoJoystick(players);
         }
@@ -280,7 +284,7 @@ namespace KinectC64
             {
                 this.Invoke((MethodInvoker)delegate   // runs on UI thread
                 {
-                    lDebug.Text = "Tracked: " + kinect.num_tracked.ToString();
+                    lDebug.Text = "Tracked: " + players.Count;
                     lFrame.Text = "Frame: " + framenum.ToString();
                     lDelta.Text = "Delta: " + delta.ToString();
 

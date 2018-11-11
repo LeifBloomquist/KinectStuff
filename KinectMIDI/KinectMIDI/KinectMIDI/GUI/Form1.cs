@@ -46,10 +46,10 @@ namespace KinectMIDI
 
             // MIDI Processing
             
-            String midi_output = MIDIProcessor.ProcessMIDI(players, kinect.num_tracked);
+            // TODO String midi_output = MIDIProcessor.ProcessMIDI(players, kinect.num_tracked);
 
             // Update Screen
-            UpdateMIDIDetails(players, midi_output);
+            //UpdateMIDIDetails(players, midi_output);
         }
 
         private void UpdateTrackingDetails(List<Player3D> players, int framenum, long delta)
@@ -58,7 +58,7 @@ namespace KinectMIDI
             {
                 this.Invoke((MethodInvoker)delegate   // runs on UI thread
                 {
-                    lDebug.Text = "Tracked: " + kinect.num_tracked.ToString();
+                    lDebug.Text = "Tracked: " + players.Count;
                     lFrame.Text = "Frame: " + framenum.ToString();
                     lDelta.Text = "Delta: " + delta.ToString();
 

@@ -45,15 +45,15 @@
             this.Fire = new System.Windows.Forms.Label();
             this.Left = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lDelta = new System.Windows.Forms.Label();
+            this.lDebug = new System.Windows.Forms.Label();
+            this.lFrame = new System.Windows.Forms.Label();
             this.SerialLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bStop = new System.Windows.Forms.Button();
             this.cbSeated = new System.Windows.Forms.CheckBox();
             this.bStart = new System.Windows.Forms.Button();
-            this.lDelta = new System.Windows.Forms.Label();
-            this.lFrame = new System.Windows.Forms.Label();
-            this.lDebug = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.Joystick.SuspendLayout();
@@ -293,6 +293,41 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Kinect Tracking Data";
             // 
+            // lDelta
+            // 
+            this.lDelta.BackColor = System.Drawing.Color.Transparent;
+            this.lDelta.Font = new System.Drawing.Font("OCR A Extended", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lDelta.ForeColor = System.Drawing.Color.White;
+            this.lDelta.Location = new System.Drawing.Point(6, 66);
+            this.lDelta.Name = "lDelta";
+            this.lDelta.Size = new System.Drawing.Size(253, 23);
+            this.lDelta.TabIndex = 23;
+            this.lDelta.Text = "--";
+            this.lDelta.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lDebug
+            // 
+            this.lDebug.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lDebug.ForeColor = System.Drawing.Color.White;
+            this.lDebug.Location = new System.Drawing.Point(4, 20);
+            this.lDebug.Name = "lDebug";
+            this.lDebug.Size = new System.Drawing.Size(251, 23);
+            this.lDebug.TabIndex = 24;
+            this.lDebug.Text = "--";
+            this.lDebug.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lFrame
+            // 
+            this.lFrame.BackColor = System.Drawing.Color.Transparent;
+            this.lFrame.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lFrame.ForeColor = System.Drawing.Color.White;
+            this.lFrame.Location = new System.Drawing.Point(4, 43);
+            this.lFrame.Name = "lFrame";
+            this.lFrame.Size = new System.Drawing.Size(253, 23);
+            this.lFrame.TabIndex = 22;
+            this.lFrame.Text = "--";
+            this.lFrame.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // SerialLabel
             // 
             this.SerialLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
@@ -340,8 +375,6 @@
             // cbSeated
             // 
             this.cbSeated.AutoSize = true;
-            this.cbSeated.Checked = true;
-            this.cbSeated.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbSeated.Font = new System.Drawing.Font("OCR A Extended", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSeated.ForeColor = System.Drawing.Color.White;
             this.cbSeated.Location = new System.Drawing.Point(924, 84);
@@ -362,41 +395,6 @@
             this.bStart.Text = "Start";
             this.bStart.UseVisualStyleBackColor = true;
             this.bStart.Click += new System.EventHandler(this.bStart_Click);
-            // 
-            // lDelta
-            // 
-            this.lDelta.BackColor = System.Drawing.Color.Transparent;
-            this.lDelta.Font = new System.Drawing.Font("OCR A Extended", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lDelta.ForeColor = System.Drawing.Color.White;
-            this.lDelta.Location = new System.Drawing.Point(6, 66);
-            this.lDelta.Name = "lDelta";
-            this.lDelta.Size = new System.Drawing.Size(253, 23);
-            this.lDelta.TabIndex = 23;
-            this.lDelta.Text = "--";
-            this.lDelta.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lFrame
-            // 
-            this.lFrame.BackColor = System.Drawing.Color.Transparent;
-            this.lFrame.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lFrame.ForeColor = System.Drawing.Color.White;
-            this.lFrame.Location = new System.Drawing.Point(4, 43);
-            this.lFrame.Name = "lFrame";
-            this.lFrame.Size = new System.Drawing.Size(253, 23);
-            this.lFrame.TabIndex = 22;
-            this.lFrame.Text = "--";
-            this.lFrame.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lDebug
-            // 
-            this.lDebug.Font = new System.Drawing.Font("OCR A Extended", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lDebug.ForeColor = System.Drawing.Color.White;
-            this.lDebug.Location = new System.Drawing.Point(4, 20);
-            this.lDebug.Name = "lDebug";
-            this.lDebug.Size = new System.Drawing.Size(251, 23);
-            this.lDebug.TabIndex = 24;
-            this.lDebug.Text = "--";
-            this.lDebug.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // MainGUI
             // 

@@ -11,6 +11,7 @@ namespace KinectMIDI
         public Point3D Left;   // { get; set; }
         public Point3D Right;  // { get; set; }
         public Point3D Head;   // { get; set; }
+        public Point3D Spine;   // { get; set; }
         public double HandDistance { get; private set; }
 
         // For velocity calcs
