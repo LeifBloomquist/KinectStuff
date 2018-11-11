@@ -157,8 +157,8 @@ namespace KinectC64
         
         private byte getMotions(Player3D player)
         {       
-            const float threshold = 0.2f;
-            const float thresholdf = 0.5f;
+            const float threshold = 0.1f;
+            const float thresholdf = 0.4f;
 
             byte temp=0;
             bool up = false, down = false, left = false, right = false, fire = false;
